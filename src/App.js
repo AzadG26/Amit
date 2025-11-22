@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-
 import { Header } from "./components/Header";
 import { Sidebar } from "./components/Sidebar";
-
 import { DashboardOverview } from "./components/DashboardOverview";
 import { DailyDataBook } from "./components/DailyDataBook";
 
-import TruckDriver from "./components/TruckDriver";
-import MaalIn from "./components/MaalIn";
+import TruckDriver from "./components/TruckDriver";   // ✅ default export
+import MaalIn from "./components/MaalIn";             // ✅ default export
 
 import { RokadiUpdate } from "./components/RokadiUpdate";
 import { BankAccount } from "./components/BankAccount";
@@ -17,11 +15,10 @@ import KabadiwalaSection from "./components/KabadiwalaSection";
 import { PartnershipAccount } from "./components/PartnershipAccount";
 import { BusinessReports } from "./components/BusinessReports";
 import { MillSection } from "./components/MillSection";
-import RatesUpdate from "./components/RatesUpdate";
-
+import RatesUpdate  from "./components/RatesUpdate";
 import { ManagerDashboard } from "./components/manager/ManagerDashboard";
-import { Login } from "./components/Login";
 
+import { Login } from "./components/Login";
 import { Toaster } from "./components/ui/sonner";
 
 import { AuthProvider, useAuth } from "./utils/authContext";
@@ -29,10 +26,10 @@ import { DataProvider } from "./utils/dataContext";
 
 function AppContent() {
   const { user, isAuthenticated } = useAuth();
-
   const [activeSection, setActiveSection] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
 
+  // Set default dashboard after login
   useEffect(() => {
     if (user?.role === "manager") {
       setActiveSection("manager-dashboard");
@@ -42,7 +39,7 @@ function AppContent() {
   }, [user]);
 
   const toggleDarkMode = () => {
-    setDarkMode(prev => !prev);
+    setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark");
   };
 
@@ -50,6 +47,9 @@ function AppContent() {
     return <Login />;
   }
 
+  // ============================
+  //  OWNER SECTION ROUTING
+  // ============================
   const renderActiveSection = () => {
     if (user?.role === "manager") {
       return <ManagerDashboard />;
@@ -62,10 +62,10 @@ function AppContent() {
       case "daily-book":
         return <DailyDataBook />;
 
-      case "maal-in":
+      case "maal-in":                    // ✅ corrected
         return <MaalIn />;
 
-      case "truck-driver":
+      case "truck-driver":               // ✅ corrected
         return <TruckDriver />;
 
       case "rokadi":
@@ -93,46 +93,6 @@ function AppContent() {
         return <BusinessReports />;
 
       case "mill":
-        return <MillSection />;
-
-      default:
-        return <DashboardOverview />;
-    }
-  };
-
-  return (
-    <div className={darkMode ? "dark min-h-screen" : "min-h-screen"}>
-      <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
-        <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-
-        <div className="flex flex-1 overflow-hidden">
-          {user?.role === "owner" && (
-            <Sidebar
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
-            />
-          )}
-
-          <main className="flex-1 overflow-y-auto p-6">
-            {renderActiveSection()}
-          </main>
-        </div>
-      </div>
-
-      <Toaster />
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <AuthProvider>
-      <DataProvider>
-        <AppContent />
-      </DataProvider>
-    </AuthProvider>
-  );
-}      case "mill":
         return <MillSection />;
 
       default:
